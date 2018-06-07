@@ -16,11 +16,29 @@ $(document).on("click", "#register", function () {
             "name":name,
             "id_number":id_number
         },
-
         success:function (data) {
-            console.log(data);
-            if (data == "1"){
-                window.location.href = "../sports/pre_login"
+            if (data == "2"){
+                swal({
+                    title: "\n用户名已注册!",
+                    text: "",
+                    type: "error",
+                    confirmButtonText: "OK"
+                },
+                function () {
+                   // window.location.href = "../index";
+                });
+            }
+            else
+            {
+                swal({
+                    title: "\n注册成功!",
+                    text: "",
+                    type: "success",
+                    confirmButtonText: "OK"
+                },
+                function () {
+                   window.location.href = "../login";
+                });
             }
         }
     });

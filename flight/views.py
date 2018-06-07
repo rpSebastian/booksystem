@@ -1,6 +1,10 @@
 from django.shortcuts import render;
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Customer, Flight, Booking
+
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+
 # Create your views here.
     
 def login(request):
@@ -36,13 +40,11 @@ def register_solve(request):
     password = request.POST.get("password")
     name = request.POST.get("name")
     id_number = request.POST.get("id_number")
-    
-    user = User.objects.create_user(username = username,password = password)
-    user.name = name
-    user.id_number = id_number
+    try:
+        user = User.objects.create_user(username=username, password=password)
+    except Exception as e:
+        return HttpResponse(2)
     user.save()
-    user = authenticate(username = username,password = password)
-    print(User.objects.get(username = username))
-    team_user = Team_User.objects.create(user = user,teamname =teamname)
-    team_user.save()
+    customer = Customer(user=user, name=name, id_number=id_number)
+    customer.save()
     return HttpResponse(1)
