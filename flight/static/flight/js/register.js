@@ -25,7 +25,7 @@ $(document).on("click", "#register", function () {
                     confirmButtonText: "OK"
                 },
                 function () {
-                   // window.location.href = "../index";
+                   //window.location.href = "../index";
                 });
             }
             else

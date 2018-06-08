@@ -1,0 +1,6 @@
+{% extends "flight/base.html" %} {% load staticfiles %} {% block title %} 机票管理系统 {% endblock title %} {% block css %}
+<link href="{% static 'flight/css/index.css' %}" rel="stylesheet" type="text/css" /> {% endblock css %} {% block js %}
+<script src="{% static 'flight/js/index.js' %}"></script>
+{% endblock js %} {% block content %}
+{% include "flight/navbar.html" %}
+{% endblock content %}
