@@ -36,12 +36,21 @@
   <link href="{% static 'flight/css/base.css' %}" rel="stylesheet" type="text/css" />
   <!-- sweetalert插件 -->
   <script src="{% static 'flight/js/sweet-alert.min.js' %}"></script>
-  <link rel="stylesheet" type="text/css" href="{% static 'flight/css/sweet-alert.css' %}"> {% block css %} {% endblock css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'flight/css/sweet-alert.css' %}"> 
+  <!-- datetimepaker插件 -->
+  <link href="{% static 'flight/css/bootstrap.datepicker/bootstrap-datepicker3.min.css' %}" rel="stylesheet" />
+  <script src="{% static 'flight/js/bootstrap.datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'flight/js/bootstrap.datepicker/locales/bootstrap-datepicker.zh-CN.min.js' %}"></script>
+  <!--datatable插件-->
+  <!-- <link href="{% static 'flight/css/jquery.dataTables.css' %}" rel="stylesheet" />
+  <script src="{% static 'flight/js/jquery.dataTables.js' %}"></script> -->
+  {% block css %} {% endblock css %}
   <title>{% block title %} {% endblock title%}</title>
 </head>
 
 <body>
   {% block content %}{% endblock content %}
+  <!-- csrf验证 -->
   <script>
     $.ajaxSetup({
       headers: {

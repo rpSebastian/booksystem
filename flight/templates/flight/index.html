@@ -1,6 +1,54 @@
-{% extends "flight/base.html" %} {% load staticfiles %} {% block title %} 机票管理系统 {% endblock title %} {% block css %}
+{% extends "flight/base.html" %} {% load staticfiles %} {% block title %} 机票预订 {% endblock title %} {% block css %}
 <link href="{% static 'flight/css/index.css' %}" rel="stylesheet" type="text/css" /> {% endblock css %} {% block js %}
 <script src="{% static 'flight/js/index.js' %}"></script>
-{% endblock js %} {% block content %}
-{% include "flight/navbar.html" %}
+{% endblock js %} {% block content %} {% include "flight/navbar.html" %}
+
+<div class="container-fluid myall">
+  <div class="maincontent row">
+    <form action="{% url 'flight:result' %}" method="post" class="search col-sm-4">
+      <span style="color:#ff0000;">{% csrf_token %}</span> 
+      <div class="col-sm-12 mt-1">
+        <div class="form-group row">
+          <label for="leave-city" class="col-sm-3 control-label">起飞城市</label>
+          <div class="col-sm-9 sandbox-container">
+            <select class="form-control" id="leave-city" name="leave-city">
+              <option value=""></option>
+              {% for city in cities %}
+              <option value="{{ forloop.counter }}">{{city.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="form-group row">
+          <label for="arrive-city" class="col-sm-3 control-label">到达城市</label>
+          <div class="col-sm-9 sandbox-container">
+            <select class="form-control" id="arrive-city" name="arrive-city">
+              <option value=""></option>
+              {% for city in cities %}
+              <option value="{{ forloop.counter }}">{{city.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="form-group row">
+          <label for="leave-date" class="col-sm-3 control-label">出发日期</label>
+          <div class="col-sm-9 sandbox-container">
+            <div class="input-daterange input-group">
+              <input type="text" class="form-control" name="leave-date" id="leave-date">
+              {% comment %} <span class="input-group-addon">to</span> {% endcomment %}
+              {% comment %} <input type="text" class="form-control" name="arrive-date" id="arrive-date"> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 mb-1">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="search">立即出发</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock content %}

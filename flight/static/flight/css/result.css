@@ -1,0 +1,56 @@
+body {
+    background-color: #F7F7F7;
+}
+.datepicker { margin-top: 70px; }
+.myall{
+    margin-top: 70px;
+}
+.search-content{
+    background-color: #ffffff;
+}
+.price{
+    font-size: 30px;
+    display: inline-block;
+    margin-top: 30px;
+}
+label{
+    margin-top:10px;
+}
+.rmb {
+    line-height: 22px;
+    font-size: 15px;
+    vertical-align: top;
+}
+.number{
+    color: #FF6600;
+}
+.count{
+    font-size:15px;
+    top:0px;
+    left: 10px;
+    position: absolute;
+}
+.count-num{
+    font-size:15px;
+    position: absolute;
+    left: 30px;
+    top:25px;
+}
+.arrow{
+    background: url("../images/flight_arrow.png") no-repeat center;
+    width: 180px;
+    height: 40px;
+    position: absolute;
+    left:-85px;
+    top: 24px;
+}
+.flight-company{
+    display: inline;
+}
+.flight-id{
+    font-weight: 600; 
+    display: inline;
+}
+.flight-info{
+    margin-top:28px;
+}

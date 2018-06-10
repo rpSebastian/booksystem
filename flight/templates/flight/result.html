@@ -1,0 +1,145 @@
+{% extends "flight/base.html" %} {% load staticfiles %} {% block title %} 机票管理系统 {% endblock title %} {% block css %}
+<link href="{% static 'flight/css/result.css' %}" rel="stylesheet" type="text/css" /> {% endblock css %} {% block js %}
+<script src="{% static 'flight/js/result.js' %}"></script>
+{% endblock js %} {% block content %} {% include "flight/navbar.html" %}
+
+<div class="container myall">
+  <div class="maincontent row">
+    <form method="post" action="{% url 'flight:result' %}" class="search col-sm-12">
+      <span style="color:#ff0000;">{% csrf_token %}</span>
+      <div class="col-sm-3">
+        <div class="form-group row">
+          <label for="leave-city" class="col-sm-4 control-label">起飞城市</label>
+          <div class="col-sm-8 sandbox-container">
+            <select class="form-control" name="leave-city">
+              <option value="">----------------</option>
+              {% for city in cities %} {% if forloop.counter == leave_city1 %}
+              <option value="{{ forloop.counter }}" selected>{{city.name}}</option>
+              {% else %}
+              <option value="{{ forloop.counter }}">{{city.name}}</option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group row">
+          <label for="arrive-city" class="col-sm-4 control-label">到达城市</label>
+          <div class="col-sm-8 sandbox-container">
+            <select class="form-control" name="arrive-city">
+              <option value="">----------------</option>
+              {% for city in cities %} {% if forloop.counter == arrive_city1 %}
+              <option value="{{ forloop.counter }}" selected>{{city.name}}</option>
+              {% else %}
+              <option value="{{ forloop.counter }}">{{city.name}}</option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group row">
+          <label for="leave-date" class="col-sm-4 control-label">出发日期</label>
+          <div class="col-sm-8 sandbox-container">
+            <div class="input-daterange input-group">
+              <input type="text" class="form-control" name="leave-date" id="leave-date" value="{{leave_date1}}">
+              {% comment %} <span class="input-group-addon">to</span> {% endcomment %}
+              {% comment %} <input type="text" class="form-control" name="arrive-date" id="arrive-date" value="{{arrive_date1}}"> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group row">
+          <label for="company" class="col-sm-4 control-label">航空公司</label>
+          <div class="col-sm-8 sandbox-container">
+            <select class="form-control" name="company" id="company">
+              <option value="0">----------------</option>
+              {% for company in companies %} {% if forloop.counter == company1 %}
+              <option value="{{ forloop.counter }}" selected>{{company.name}}</option>
+              {% else %}
+              <option value="{{ forloop.counter }}">{{company.name}}</option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group row">
+          <label for="" class="col-sm-2 control-label">价格区间</label>
+          <div class="col-sm-10 sandbox-container">
+            <div class="input-group">
+              <input type="text" class="form-control" name="start-price" id="start-price" value="{{start_price}}">
+              <span class="input-group-addon">to</span>
+              <input type="text" class="form-control" name="end-price" id="end-price" value="{{end_price}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group row">
+          <label for="leave-city" class="col-sm-4 control-label">排序方式</label>
+          <div class="col-sm-8 sandbox-container">
+            <select class="form-control" name="sort-way">
+              <option value="0">----------------</option>
+              <option value="1">起飞时间</option>
+              <option value="2">到达时间</option>
+              <option value="3">价格</option>
+              <option value="4">购票率</option>
+              <option value="5">飞行时间</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="col-sm-6">
+          <label class="radio-inline">
+            <input type="radio" name="sort-sequence" id="sort-way-1" value="1" checked> 顺序
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <label class="radio-inline">
+            <input type="radio" name="sort-sequence" id="sort-way-2" value="2"> 倒序
+          </label>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <button type="submit" class="btn btn-primary btn-block" id="search">重新搜索</button>
+      </div>
+      <div class="search-title col-sm-12 mt-2">
+        <button type="button" class="col-sm-3 btn btn-primary">航班信息</button>
+        <button type="button" class="col-sm-3 btn btn-warning">起飞时间</button>
+        <button type="button" class="col-sm-3 btn btn-success">到达时间</button>
+        <button type="button" class="col-sm-3 btn btn-danger">价格</button>
+      </div>
+
+      {% for flight in available_flights %}
+      <div class="search-content col-sm-12 mt-1">
+        <div class="col-sm-3 text-center flight-info">
+          <h2 class="flight-company">{{flight.flight_company}}</h2>
+          <h4 class="flight-id" id="flight-id{{forloop.counter}}">{{flight.flight_id}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <h2> {{flight.leave_time1}}</h2>
+          <h4> {{flight.leave_airport}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <div class="arrow"></div>
+          <h2> {{flight.arrive_time1}}</h2>
+          <h4> {{flight.arrive_airport}}</h4>
+        </div>
+        <div class="col-sm-3 text-center price">
+          <span class="count"> 已购票 </span>
+          <span class="count-num"> {{flight.ticket_per}}% </span>
+          <span class="rmb">¥</span>
+          <span class="number"> {{flight.ticket_price1}} </span>
+          <button type="button" class="btn btn-warning booking" id="booking{{forloop.counter}}">订票</button>
+        </div>
+      </div>
+
+      {% endfor %}
+
+    </form>
+    {% endblock content %}

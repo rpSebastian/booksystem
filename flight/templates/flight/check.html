@@ -1,0 +1,43 @@
+{% extends "flight/base.html" %} {% load staticfiles %} {% block title %} 机票管理系统 {% endblock title %} {% block css %}
+<link href="{% static 'flight/css/check.css' %}" rel="stylesheet" type="text/css" /> {% endblock css %} {% block js %}
+<script src="{% static 'flight/js/check.js' %}"></script>
+{% endblock js %} {% block content %} {% include "flight/navbar.html" %}
+
+<div class="container myall">
+  <div class="maincontent row">
+    <div class="search-title col-sm-12 mt-2">
+      <button type="button" class="col-sm-3 btn btn-primary">航班信息</button>
+      <button type="button" class="col-sm-3 btn btn-warning">起飞时间及地点</button>
+      <button type="button" class="col-sm-3 btn btn-success">到达时间及地点</button>
+      <button type="button" class="col-sm-3 btn btn-danger">订购价格</button>
+    </div>
+    <div class="col-sm-12">
+      {% for flight in available_flights %}
+      <div class="search-content col-sm-12 mt-1">
+        <div class="col-sm-3 text-center flight-info">
+          <h2 class="flight-company">{{flight.flight_company}}</h2>
+          <h4 class="flight-id" id="flight-id{{forloop.counter}}">{{flight.flight_id}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <h4> {{flight.leave_time}}</h4>
+          <h4> {{flight.leave_city}} &nbsp;{{flight.leave_airport}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          
+          <h4> {{flight.arrive_time}}</h4>
+          <h4> {{flight.arrive_city}} &nbsp;{{flight.arrive_airport}}</h4>
+        </div>
+        <div class="col-sm-3 text-center price">
+          <span class="rmb">¥</span>
+          <span class="number"> {{flight.ticket_price1}} </span>
+          <button type="button" class="btn btn-warning booking" id="booking{{forloop.counter}}">退票</button>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

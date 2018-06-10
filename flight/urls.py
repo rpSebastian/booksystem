@@ -11,5 +11,11 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     url(r'^register/solve/$', views.register_solve),
     url(r'^index/$', views.index, name='index'),
-    url(r'^index/logout/$', views.logout),
+    url(r'^logout/$', views.logout),
+    url(r'^result/$', views.result, name='result'),
+    url(r'^result/booking/$', views.result_booking),
+    url(r'^check/$', views.check, name='check'),
+    url(r'^check/booking/$', views.check_booking),
+    url(r'^update/$', views.update, name='update'),
+    url(r'^update/solve/$', views.update_solve),
 ]

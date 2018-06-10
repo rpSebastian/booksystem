@@ -1,44 +1,31 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="{% url 'flight:index' %}">首页</a>
+      <a class="navbar-brand" href="{% url 'flight:index' %}">
+        <i class="fa fa-fighter-jet" aria-hidden="true"></i> &nbsp; 机票预订</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="top1.html">top1.html</a>
-        </li>
-        <li>
-          <a href="top2.html">top2.html</a>
-        </li>
-        <li>
-          <a href="top3.html">top3.html</a>
-        </li>
-        <li>
-          <a href="https://github.com/shihao316558512/bootstrap" target="_blank">
-            <i class="fa fa-download fa-fw"></i>&nbsp;原码下载</a>
-        </li>
-      </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            <i class="fa fa-user fa-fw"></i>&nbsp;{{name}}&nbsp;
-            <span class="caret"></span>
+        <li>
+          <a href="{% url 'flight:check' %}">
+              <i class="fa fa-book" aria-hidden="true"></i> &nbsp;已订机票查询&nbsp;
           </a>
-          <ul class="dropdown-menu" role="menu">
-            <li>
-              <a href="top-right1.html">top-right1.html</a>
-            </li>
-            <li class="divider"></li>
-            <li>
-              <a href="top-right2.html">top-right2.html</a>
-            </li>
-            <li class="divider"></li>
-            <li>
-              <a herf="javascript:void(0)" style="cursor:pointer" class="logout">
-                <i class="fa fa-sign-out fa-fw"></i>&nbsp;<b>退出账号</b></a>
-            </li>
-          </ul>
+        </li>
+        <li>
+          <a href="{% url 'flight:update' %}">
+              <i class="fa fa-cog" aria-hidden="true"></i> &nbsp;个人信息修改&nbsp;
+          </a>
+        </li>
+        <li>
+          <a>
+            <i class="fa fa-user fa-fw"></i>&nbsp;欢迎您, {{name}}&nbsp;
+          </a>
+        </li>
+        <li>
+          <a herf="javascript:void(0)" style="cursor:pointer" class="logout">
+            <i class="fa fa-sign-out fa-fw"></i>&nbsp;
+            <b>退出账号</b>
+          </a>
         </li>
       </ul>
     </div>

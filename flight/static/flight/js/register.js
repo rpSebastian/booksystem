@@ -6,7 +6,7 @@ $(document).on("click", "#register", function () {
     var password = $("#password").val();
     var name = $("#name").val();
     var id_number = $("#id-number").val();
-    
+    var phone_number = $("#phone-number").val();
     $.ajax({
         type:"post",
         url:"solve/",
@@ -14,7 +14,8 @@ $(document).on("click", "#register", function () {
             "username":username,
             "password":password,
             "name":name,
-            "id_number":id_number
+            "id_number":id_number,
+            "phone_number":phone_number,
         },
         success:function (data) {
             if (data == "2"){
