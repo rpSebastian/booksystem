@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^check/booking/$', views.check_booking),
     url(r'^update/$', views.update, name='update'),
     url(r'^update/solve/$', views.update_solve),
+    url(r'^insert_data$', views.insert_data),
 ]

@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 import django.contrib.auth
 from .modify import *
+import json
 # Create your views here.
-
 
 def login(request):
     if request.user.is_authenticated:
@@ -58,6 +58,9 @@ def check(request):
 def result(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('flight:login'))
+    transfer = request.POST.get("transfer")
+    transfer = '1' if transfer is None else transfer
+    transfer = int(transfer)
     cities = City.objects.all()
     companies = Company.objects.all()
     user = request.user;
@@ -71,13 +74,14 @@ def result(request):
     company1 = request.POST.get('company')
     company1 = '0' if company1 is None else company1
     company1 = int(company1)
-    arrive_city = City.objects.get(pk=arrive_city1)
-    leave_city = City.objects.get(pk=leave_city1)
+    companies = Company.objects.all()
+    arrive_city = cities[arrive_city1 - 1]
+    leave_city = cities[leave_city1 - 1] 
     leave_date = datetime.strptime(leave_date1, "%Y 年 %m 月 %d 日")
     if company1 == 0:
         flights = Flight.objects.filter(leave_city=leave_city, arrive_city=arrive_city)
     else:
-        flights = Flight.objects.filter(leave_city=leave_city, arrive_city=arrive_city, flight_company=Company.objects.get(pk=company1))
+        flights = Flight.objects.filter(leave_city=leave_city, arrive_city=arrive_city, flight_company=companies[company1 - 1])
     available_flights = []
     for flight in flights:
         if flight.leave_time.date() == leave_date.date():
@@ -86,25 +90,42 @@ def result(request):
             if end_price is not None and end_price.strip() != "" and flight.ticket_price > float(end_price):
                 continue
             flight.arrive_time1 = addzero(str(flight.arrive_time.hour)) + ":" + addzero(str(flight.arrive_time.minute))
+            flight.leave_time1 = addzero(str(flight.leave_time.hour)) + ":" + addzero(str(flight.leave_time.minute))
             flight.ticket_price1 = int(flight.ticket_price)
             flight.ticket_per = int(flight.ticket_bought * 100 / flight.ticket_number)
             available_flights.append(flight)
     start_price = '' if start_price is None else start_price
     end_price = '' if end_price is None else end_price        
     sort_way = request.POST.get("sort-way")
+    if sort_way is None:
+        sort_way = '0'
+    sort_way = int(sort_way)
     sort_sequence = request.POST.get("sort-sequence")
-    rev = True if sort_sequence == '2' else False
-    if sort_way == '1':
+    if sort_sequence is None:
+        sort_sequence = '1'
+    sort_sequence = int(sort_sequence)
+    rev = True if sort_sequence == 2 else False
+    if sort_way == 1:
         available_flights.sort(key=lambda x:x.leave_time, reverse=rev)
-    elif sort_way == '2':
+    elif sort_way == 2:
         available_flights.sort(key=lambda x:x.arrive_time, reverse=rev)
-    elif sort_way == '3':
+    elif sort_way == 3:
         available_flights.sort(key=lambda x:x.ticket_price1, reverse=rev)
-    elif sort_way == '4':
+    elif sort_way == 4:
         available_flights.sort(key=lambda x:x.ticket_per, reverse=rev)
-    elif sort_way == '5':
+    elif sort_way == 5:
         available_flights.sort(key=lambda x:x.arrive_time-x.leave_time, reverse=rev)
-    
+    pagenum = 6;
+    pagetot = (len(available_flights) - 1) // pagenum + 1
+    pagecur = request.POST.get("pagecur")
+    if pagecur is None:
+        pagecur = 1
+    else:
+        pagecur = int(pagecur)
+    if (request.POST.get("restart") != '2'):
+        pagecur = 1
+    available_flights = available_flights[(pagecur - 1) * pagenum : pagecur * pagenum] 
+    print(transfer)
     return render(request, "flight/result.html", locals())
 
 
@@ -151,10 +172,16 @@ def update_solve(request):
 
 def result_booking(request):
     flight_id = request.POST.get("flight_id")
+    leave_date = request.POST.get("leave_date")
+    leave_date = datetime.strptime(leave_date, "%Y 年 %m 月 %d 日")
     user = request.user;
     customer = Customer.objects.get(user=user)
     name = customer.name
-    flight = Flight.objects.get(flight_id=flight_id)
+    flights = Flight.objects.filter(flight_id=flight_id)
+    for fly in flights:
+        if fly.leave_time.date() == leave_date.date():
+            flight = fly
+            break
     booking = Booking(flight=flight,customer=customer,booking_price=flight.ticket_price)
     if (flight.ticket_bought >= flight.ticket_number):
         return HttpResponse("2")    
@@ -165,10 +192,12 @@ def result_booking(request):
 
 def check_booking(request):
     flight_id = request.POST.get("flight_id")
+    leave_time = request.POST.get("leave_time")
+    leave_time = datetime.strptime(leave_time, " %Y-%m-%d %H:%M:%S")
     user = request.user;
     customer = Customer.objects.get(user=user)
     name = customer.name
-    flight = Flight.objects.get(flight_id=flight_id)
+    flight = Flight.objects.get(flight_id=flight_id, leave_time=leave_time)
     booking = Booking.objects.filter(flight=flight,customer=customer,booking_price=flight.ticket_price)[0]
     flight.ticket_bought -= 1
     flight.save()
@@ -178,4 +207,50 @@ def check_booking(request):
 def logout(request):
     django.contrib.auth.logout(request)
     print(1)
+    return HttpResponse("ok")
+
+def insert_data(request):
+    with open("flight/xiecheng_guo.json",'r', encoding='UTF-8') as f:   
+        flights = json.loads(f.read())
+    city = {
+        "SHA": "上海",
+        "BJS": "北京",
+        "HGH": "杭州",
+        "XMN": "厦门",
+        "CTU": "成都",
+        "NKG": "南京",
+        "SIA": "西安",
+        "WUH": "武汉",
+    }
+    for flight in flights:
+        cities = flight["from-to"].split("-")
+        leave_city = city[cities[0]]
+        arrive_city = city[cities[1]]
+        leave_city, created = City.objects.get_or_create(name=leave_city)
+        arrive_city, created = City.objects.get_or_create(name=arrive_city)
+        leave_date = flight["get-time"]
+        content = flight["content"]
+        for fly in content:
+            flight_company = fly["flight-company"]
+            flight_company, created = Company.objects.get_or_create(name=flight_company)
+            flight_id = fly["id"]
+            start_time = fly["start-time"]
+            arrive_time = fly["arrive-time"]
+            arrive_airport = fly["start-airport"].split("T")[0]
+            leave_airport = fly["arrive-airport"].split("T")[0]
+            leave_airport, created = Airport.objects.get_or_create(name=leave_airport)
+            arrive_airport, created = Airport.objects.get_or_create(name=arrive_airport)
+            ticket_price = fly["price"][1:]
+            leave_time = leave_date + " " + start_time + ":00"
+            arrive_time = leave_date + " " + arrive_time + ":00"
+            leave_time = datetime.strptime(leave_time, "%Y-%m-%d %H:%M:%S")
+            arrive_time = datetime.strptime(arrive_time, "%Y-%m-%d %H:%M:%S")
+            print(leave_time)
+            print(type(leave_time))
+            new_flight = Flight.objects.get_or_create(flight_id=flight_id,leave_city=leave_city,flight_company=flight_company,
+                        leave_airport=leave_airport,leave_time=leave_time,arrive_city=arrive_city,
+                        arrive_airport=arrive_airport,
+                        arrive_time=arrive_time,
+                        ticket_price=float(ticket_price))
+            print(new_flight)
     return HttpResponse("ok")

@@ -19,6 +19,7 @@ $(document).on("click", ".booking", function () {
     var cond={};
     var id = $(this).attr("id").substring(7);
     cond.flight_id = $("#flight-id" + id).html();
+    cond.leave_time = $(".leave_time" + id).html();
     swal({ 
         title: "确认取消订购该机票吗？", 
         type: "warning",

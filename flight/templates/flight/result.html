@@ -5,14 +5,14 @@
 
 <div class="container myall">
   <div class="maincontent row">
-    <form method="post" action="{% url 'flight:result' %}" class="search col-sm-12">
+    <form method="post" action="{% url 'flight:result' %}" class="search col-sm-12" id="form">
       <span style="color:#ff0000;">{% csrf_token %}</span>
       <div class="col-sm-3">
         <div class="form-group row">
           <label for="leave-city" class="col-sm-4 control-label">起飞城市</label>
           <div class="col-sm-8 sandbox-container">
             <select class="form-control" name="leave-city">
-              <option value="">----------------</option>
+              <option value="0">----------------</option>
               {% for city in cities %} {% if forloop.counter == leave_city1 %}
               <option value="{{ forloop.counter }}" selected>{{city.name}}</option>
               {% else %}
@@ -27,7 +27,7 @@
           <label for="arrive-city" class="col-sm-4 control-label">到达城市</label>
           <div class="col-sm-8 sandbox-container">
             <select class="form-control" name="arrive-city">
-              <option value="">----------------</option>
+              <option value="0">----------------</option>
               {% for city in cities %} {% if forloop.counter == arrive_city1 %}
               <option value="{{ forloop.counter }}" selected>{{city.name}}</option>
               {% else %}
@@ -42,9 +42,9 @@
           <label for="leave-date" class="col-sm-4 control-label">出发日期</label>
           <div class="col-sm-8 sandbox-container">
             <div class="input-daterange input-group">
-              <input type="text" class="form-control" name="leave-date" id="leave-date" value="{{leave_date1}}">
-              {% comment %} <span class="input-group-addon">to</span> {% endcomment %}
-              {% comment %} <input type="text" class="form-control" name="arrive-date" id="arrive-date" value="{{arrive_date1}}"> {% endcomment %}
+              <input type="text" class="form-control" name="leave-date" id="leave-date" value="{{leave_date1}}"> {% comment %}
+              <span class="input-group-addon">to</span> {% endcomment %} {% comment %}
+              <input type="text" class="form-control" name="arrive-date" id="arrive-date" value="{{arrive_date1}}"> {% endcomment %}
             </div>
           </div>
         </div>
@@ -81,38 +81,88 @@
           <label for="leave-city" class="col-sm-4 control-label">排序方式</label>
           <div class="col-sm-8 sandbox-container">
             <select class="form-control" name="sort-way">
+
+              {% if sort_way == 0 %}
+              <option value="0" selected>----------------</option>
+              {% else %}
               <option value="0">----------------</option>
+              {% endif %} {% if sort_way == 1 %}
+              <option value="1" selected>起飞时间</option>
+              {% else %}
               <option value="1">起飞时间</option>
+              {% endif %} {% if sort_way == 2 %}
+              <option value="2" selected>到达时间</option>
+              {% else %}
               <option value="2">到达时间</option>
+              {% endif %} {% if sort_way == 3 %}
+              <option value="3" selected>价格</option>
+              {% else %}
               <option value="3">价格</option>
+              {% endif %} {% if sort_way == 4 %}
+              <option value="4" selected>购票率</option>
+              {% else %}
               <option value="4">购票率</option>
+              {% endif %} {% if sort_way == 5 %}
+              <option value="5" selected>飞行时间</option>
+              {% else %}
               <option value="5">飞行时间</option>
+              {% endif %}
             </select>
           </div>
         </div>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3 ">
         <div class="col-sm-6">
           <label class="radio-inline">
-            <input type="radio" name="sort-sequence" id="sort-way-1" value="1" checked> 顺序
-          </label>
+            {% if sort_sequence == 1 %}
+            <input type="radio" name="sort-sequence" id="sort-sequence-1" value="1" checked> 顺序 {% else %}
+            <input type="radio" name="sort-sequence" id="sort-sequence-1" value="1"> 顺序 {% endif %} </label>
         </div>
         <div class="col-sm-6">
           <label class="radio-inline">
-            <input type="radio" name="sort-sequence" id="sort-way-2" value="2"> 倒序
-          </label>
+            {% if sort_sequence == 2 %}
+            <input type="radio" name="sort-sequence" id="sort-sequence-2" value="2" checked> 倒序 {% else %}
+            <input type="radio" name="sort-sequence" id="sort-sequence-2" value="2"> 倒序 {% endif %} </label>
         </div>
       </div>
-      <div class="col-sm-6">
-        <button type="submit" class="btn btn-primary btn-block" id="search">重新搜索</button>
+      <div class="col-sm-12">
+        <div class="col-sm-3">
+          <label class="radio-inline">
+            {% if transfer == 1 %}
+            <input type="radio" name="transfer" id="sort-sequence-1" value="1" checked> 无转机 {% else %}
+            <input type="radio" name="transfer" id="sort-sequence-1" value="1"> 无转机 {% endif %} </label>
+        </div>
+        <div class="col-sm-3">
+          <label class="radio-inline">
+            {% if transfer == 2 %}
+            <input type="radio" name="transfer" id="sort-sequence-2" value="2" checked> 有转机 {% else %}
+            <input type="radio" name="transfer" id="sort-sequence-2" value="2"> 有转机 {% endif %} </label>
+        </div>
+        <div class="col-sm-6">
+          <button type="submit" class="btn btn-primary btn-block" id="search">重新搜索</button>
+        </div>
       </div>
+
+      {% if transfer == 1 %} {% if pagetot != 0 %}
+
       <div class="search-title col-sm-12 mt-2">
         <button type="button" class="col-sm-3 btn btn-primary">航班信息</button>
         <button type="button" class="col-sm-3 btn btn-warning">起飞时间</button>
         <button type="button" class="col-sm-3 btn btn-success">到达时间</button>
         <button type="button" class="col-sm-3 btn btn-danger">价格</button>
       </div>
-
+      <div class="row col-sm-12">
+        <div class="box">
+          {% comment %}
+          <div class="info fl">
+            <p>共
+              <span id="current1">1</span>
+              页
+            </p>
+          </div> {% endcomment %}
+          <div id="pagination1" class="page fl"></div>
+        </div>
+      </div>
       {% for flight in available_flights %}
       <div class="search-content col-sm-12 mt-1">
         <div class="col-sm-3 text-center flight-info">
@@ -121,7 +171,7 @@
         </div>
 
         <div class="col-sm-3 text-center">
-          <h2> {{flight.leave_time1}}</h2>
+          <h2 class="leave-time{{forloop.counter}}"> {{flight.leave_time1}}</h2>
           <h4> {{flight.leave_airport}}</h4>
         </div>
 
@@ -138,8 +188,63 @@
           <button type="button" class="btn btn-warning booking" id="booking{{forloop.counter}}">订票</button>
         </div>
       </div>
+      {% endfor %} {% else %}
+      <div class="mt-1 col-sm-12">
+        <h2>
+          该航线暂无直达航班信息, 搜索一下转机方案吧
+        </h2>
+      </div>
+      {% endif %} {% else %} {% if pagetot != 0 %}
 
-      {% endfor %}
+      <div class="search-title col-sm-12 mt-2">
+        <button type="button" class="col-sm-3 btn btn-primary">航班信息</button>
+        <button type="button" class="col-sm-3 btn btn-warning">起飞时间</button>
+        <button type="button" class="col-sm-3 btn btn-success">到达时间</button>
+        <button type="button" class="col-sm-3 btn btn-danger">价格</button>
+      </div>
+      <div class="row col-sm-12">
+        <div class="box">
+          {% comment %}
+          <div class="info fl">
+            <p>共
+              <span id="current1">1</span>
+              页
+            </p>
+          </div> {% endcomment %}
+          <div id="pagination1" class="page fl"></div>
+        </div>
+      </div>
+      <div class="col-sm-12 mt-1 text-center">
+        <div class="col-sm-4">
+          <h2>
+            方案 1
+          </h2>
+        </div>
+        <div class="col-sm-4">
+          <h2>
+            总时间：
+          </h2>
+        </div>
+        <div class="col-sm-4">
+          <h2>
+            总价格：
+          </h2>
+        </div>
+      </div>
 
+      {% else %}
+      <div class="mt-1 col-sm-12">
+        <h2>
+          该航线暂无直达航班信息
+        </h2>
+      </div>
+      {% endif %} {% endif %}
+
+
+      <div style="display:none">
+        <input type="text" name="pagetot" id="pagetot" class="form-control" value="{{pagetot}}">
+        <input type="text" name="pagecur" id="pagecur" class="form-control" value="{{pagecur}}">
+        <input type="text" name="restart" id="restart" class="form-control" value="1">
+      </div>
     </form>
     {% endblock content %}

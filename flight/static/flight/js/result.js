@@ -25,6 +25,8 @@ $(document).on("click", ".booking", function () {
     var cond={};
     var id = $(this).attr("id").substring(7);
     cond.flight_id = $("#flight-id" + id).html();
+    cond.leave_date = $("#leave-date").val();
+    cond.leave_time = $(".leave-time" + id).html();
     swal({ 
         title: "确认订购该机票吗？", 
         type: "warning",
@@ -64,4 +66,26 @@ $(document).on("click", ".booking", function () {
             });
         }
       });
+});
+
+$(function() {
+    $("#current1").text(2)
+    $("#pagination1").pagination({
+        currentPage: parseInt($("#pagecur").val()),
+        totalPage: parseInt($("#pagetot").val()),
+        callback: function(current) {
+            $("#pagecur").val(current);
+            $("#restart").val(2);
+            $("#form").submit();
+        }
+    });
+
+    $("#getPage").on("click", function() {
+        var info = $("#pagination3").pagination("getPage");
+        alert("当前页数：" + info.current + ",总页数：" + info.total);
+    });
+
+    $("#setPage").on("click", function() {
+        $("#pagination3").pagination("setPage", 1, 10);
+    });
 });
