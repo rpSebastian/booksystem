@@ -75,6 +75,9 @@ label{
     margin-top: 10px;
     margin-right: -20px;
 }
+.one-key{
+    margin-top: 15px;
+}
 .info, .page{
     display: inline-block;
 }

@@ -167,11 +167,11 @@
       <div class="search-content col-sm-12 mt-1">
         <div class="col-sm-3 text-center flight-info">
           <h2 class="flight-company">{{flight.flight_company}}</h2>
-          <h4 class="flight-id" id="flight-id{{forloop.counter}}">{{flight.flight_id}}</h4>
+          <h4 class="flight-id">{{flight.flight_id}}</h4>
         </div>
 
         <div class="col-sm-3 text-center">
-          <h2 class="leave-time{{forloop.counter}}"> {{flight.leave_time1}}</h2>
+          <h2 class="leave-time"> {{flight.leave_time1}}</h2>
           <h4> {{flight.leave_airport}}</h4>
         </div>
 
@@ -214,25 +214,78 @@
           <div id="pagination1" class="page fl"></div>
         </div>
       </div>
+
+      {% for flight in available_flights %}
       <div class="col-sm-12 mt-1 text-center">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <h2>
-            方案 1
+            方案 <span class="counter">{{forloop.counter}}</span>
           </h2>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <h2>
-            总时间：
+            总时间：{{flight.time}}
           </h2>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <h2>
-            总价格：
+            总价格：{{flight.price}}
           </h2>
+        </div>
+        
+        <div class="col-sm-3">
+          <button type="button" class="one-key btn btn-success btn-lg">同时订购</button>
         </div>
       </div>
+      <div class="search-content col-sm-12 mt-1">
+        <div class="col-sm-3 text-center flight-info">
+          <h2 class="flight-company">{{flight.flight_1.flight_company}}</h2>
+          <h4 class="flight-id">{{flight.flight_1.flight_id}}</h4>
+        </div>
 
-      {% else %}
+        <div class="col-sm-3 text-center">
+          <h2 class="leave-time"> {{flight.flight_1.leave_time1}}</h2>
+          <h4> {{flight.flight_1.leave_airport}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <div class="arrow"></div>
+          <h2> {{flight.flight_1.arrive_time1}}</h2>
+          <h4> {{flight.flight_1.arrive_airport}}</h4>
+        </div>
+        <div class="col-sm-3 text-center price">
+          <span class="count"> 已购票 </span>
+          <span class="count-num"> {{flight.flight_1.ticket_per}}% </span>
+          <span class="rmb">¥</span>
+          <span class="number"> {{flight.flight_1.ticket_price1}} </span>
+          <button type="button" class="btn btn-warning booking" id="booking{{forloop.counter}}">订票</button>
+        </div>
+      </div>
+      <div class="search-content col-sm-12 mt-1">
+        <div class="col-sm-3 text-center flight-info">
+          <h2 class="flight-company">{{flight.flight_2.flight_company}}</h2>
+          <h4 class="flight-id">{{flight.flight_2.flight_id}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <h2 class="leave-time"> {{flight.flight_2.leave_time1}}</h2>
+          <h4> {{flight.flight_2.leave_airport}}</h4>
+        </div>
+
+        <div class="col-sm-3 text-center">
+          <div class="arrow"></div>
+          <h2> {{flight.flight_2.arrive_time1}}</h2>
+          <h4> {{flight.flight_2.arrive_airport}}</h4>
+        </div>
+        <div class="col-sm-3 text-center price">
+          <span class="count"> 已购票 </span>
+          <span class="count-num"> {{flight.flight_2.ticket_per}}% </span>
+          <span class="rmb">¥</span>
+          <span class="number"> {{flight.flight_2.ticket_price1}} </span>
+          <button type="button" class="btn btn-warning booking" id="booking{{forloop.counter}}">订票</button>
+        </div>
+      </div>
+      {% endfor %} {% else %}
       <div class="mt-1 col-sm-12">
         <h2>
           该航线暂无直达航班信息
@@ -245,6 +298,7 @@
         <input type="text" name="pagetot" id="pagetot" class="form-control" value="{{pagetot}}">
         <input type="text" name="pagecur" id="pagecur" class="form-control" value="{{pagecur}}">
         <input type="text" name="restart" id="restart" class="form-control" value="1">
+        <input type="text" name="pagestart" id="pagestart" class="form-control" value="{{pagestart}}">
       </div>
     </form>
     {% endblock content %}
